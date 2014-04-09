@@ -1415,7 +1415,7 @@ module JenkinsApi
           if promotion['color'] == 'notbuilt'
             result[promotion['name']] = nil
           else
-            if promotion['lastSuccessfulBuild'].key? 'number'
+            if promotion.key? 'lastSuccessfulBuild'
               result[promotion['name']] = promotion['lastSuccessfulBuild']['number']
             else
               result[promotion['name']] = nil
