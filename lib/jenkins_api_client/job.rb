@@ -1409,16 +1409,13 @@ module JenkinsApi
         result = {}
 
         @logger.info "Obtaining the promotions of '#{job_name}'"
-        response_json = @client.api_get_request("/job/#{job_name}/promotion")
+        response_json = @client.api_get_request("/job/#{job_name}/promotion", 'depth=1')
 
-        response_json["processes"].each do |promotion|
-          @logger.info "Getting promotion details of '#{promotion['name']}'"
-
+        response_json['processes'].each do |promotion|
           if promotion['color'] == 'notbuilt'
             result[promotion['name']] = nil
           else
-            promo_json = @client.api_get_request("/job/#{job_name}/promotion/latest/#{promotion['name']}")
-            result[promotion['name']] = promo_json['target']['number']
+            result[promotion['name']] = promotion['lastSuccessfulBuild']['number']
           end
         end
 

@@ -605,6 +605,7 @@ describe JenkinsApi::Client::Job do
               "processes" => [ { "name"  => "dev",
                                  "url"   => "not_required",
                                  "color" => "blue",
+                                 "lastSuccessfulBuild" => { "number" => 42 },
                                },
                                { "name"  => "stage",
                                  "url"   => "not_required",
@@ -612,9 +613,8 @@ describe JenkinsApi::Client::Job do
                                },
                              ], }
 
-          @client.should_receive(:api_get_request).with('/job/test_job/promotion').and_return(
+          @client.should_receive(:api_get_request).with('/job/test_job/promotion', 'depth=1').and_return(
             mock_job_promotions_response)
-          @client.should_receive(:api_get_request).and_return({'target' => {'number' => 42}})
           @job.get_promotions("test_job").should == {'dev' => 42, 'stage' => nil}
         end
       end
